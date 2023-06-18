@@ -1,7 +1,7 @@
 import { ErrorType } from "./types";
 export const createError = (
-  status: number | undefined,
-  message: string
+  message: string,
+  status: number | undefined
 ):ErrorType => {
   return {
     status:status || 500,

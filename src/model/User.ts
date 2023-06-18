@@ -23,6 +23,7 @@ export interface UserType {
       token: string;
     }
   ];
+  generateAuthToken():Promise<string>
 }
 
 const stringType = {
@@ -35,46 +36,49 @@ const arrayType = {
   default: [],
 };
 
-const userSchema = new Schema<UserType>({
-  name: stringType,
-  email: stringType,
-  age: {
-    type: Number,
-    required: true,
-  },
-  languages: arrayType,
-  avatarImg: stringType,
-  followers: arrayType,
-  following: arrayType,
-  friends: arrayType,
-  address: stringType,
-  mobile: {
-    type: Number,
-    required: true,
-  },
-  password: String,
-  oAuth: {
-    type: Boolean,
-    required: true,
-  },
-  gender: {
-    type: String,
-    required: true,
-  },
-  DOB: {
-    type: Date,
-    required: true,
-  },
-  badges: arrayType,
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-      },
+const userSchema = new Schema<UserType>(
+  {
+    name: stringType,
+    email: stringType,
+    age: {
+      type: Number,
+      required: true,
     },
-  ],
-});
+    languages: arrayType,
+    avatarImg: stringType,
+    followers: arrayType,
+    following: arrayType,
+    friends: arrayType,
+    address: stringType,
+    mobile: {
+      type: Number,
+      required: true,
+    },
+    password: String,
+    oAuth: {
+      type: Boolean,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
+    DOB: {
+      type: Date,
+      required: true,
+    },
+    badges: arrayType,
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 userSchema.methods.generateAuthToken = async function (): Promise<string> {
   try {

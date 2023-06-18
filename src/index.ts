@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 config();
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { connect } from "mongoose";
 import authRouter from "./routes/auth";
@@ -29,8 +29,8 @@ const startServer = () => {
   app.use("/api/auth", authRouter);
 
   //catching errors
-  app.use((err: ErrorType, req: Request, res: Response) => {
-    const status = err.status;
+  app.use((err: ErrorType, req: Request, res: Response, next: NextFunction) => {
+    const status = err.status || 500;
     const message = err.message;
     return res.status(status).json({
       sucess: false,
