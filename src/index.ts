@@ -1,9 +1,10 @@
 import { config } from "dotenv";
 config();
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { connect } from "mongoose";
 import authRouter from "./routes/auth";
+import { ErrorType } from "./utils/types";
 
 //import constants
 const app = express();
@@ -26,6 +27,17 @@ const startServer = () => {
 
   //routers
   app.use("/api/auth", authRouter);
+
+  //catching errors
+  app.use((err: ErrorType, req: Request, res: Response) => {
+    const status = err.status;
+    const message = err.message;
+    return res.status(status).json({
+      sucess: false,
+      status,
+      message,
+    });
+  });
 
   //listening to the server
   app.listen(PORT, () => {
