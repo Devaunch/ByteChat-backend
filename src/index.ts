@@ -1,22 +1,34 @@
 import { config } from "dotenv";
 config();
 import express from "express";
-import cors from "cors"
+import cors from "cors";
+import { connect } from "mongoose";
 import authRouter from "./routes/auth";
 
 //import constants
 const app = express();
-const PORT = process.env.PORT
+const PORT = process.env.PORT;
 
-//essential middleware
-app.use(express.json());
-app.use(express.urlencoded({extended:false}))
-app.use(cors())
+connect(process.env.MONGO_URL || "mognodb://127.0.0.1/sociomedia")
+  .then(() => {
+    console.log("Connected to db");
+    startServer();
+  })
+  .catch((err) => {
+    console.log(`Couldn't connect to db due to: \n ${err}`);
+  });
 
-//routers
-app.use('/api/auth', authRouter)
+const startServer = () => {
+  //essential middleware
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use(cors());
 
-//listening to the server
-app.listen(PORT, ()=>{
-    console.log(`Listening at port: ${PORT}`)
-})
+  //routers
+  app.use("/api/auth", authRouter);
+
+  //listening to the server
+  app.listen(PORT, () => {
+    console.log(`Listening at port: ${PORT}`);
+  });
+};
