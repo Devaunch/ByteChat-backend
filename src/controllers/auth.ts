@@ -34,14 +34,14 @@ export const Register: RequestHandler = async (req, res, next) => {
     !gender ||
     !DOB
   ) {
-    next(createError("Please provide all the fields", 402));
+    return next(createError("Please provide all the fields", 402));
   }
   try {
     const emailExists = await USER.find({ email });
     const numberExists = await USER.find({ mobile });
 
     if (emailExists.length !== 0 || numberExists.length !== 0) {
-      next(
+      return next(
         createError("You already have an account, Please login to proceed", 402)
       );
     }
