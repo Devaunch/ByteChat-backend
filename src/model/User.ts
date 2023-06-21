@@ -12,8 +12,6 @@ export interface UserType {
   following: string[];
   friends: string[];
   badges: string[];
-  address: string;
-  mobile: number;
   gender: string;
   DOB: Date;
   password: string;
@@ -49,11 +47,6 @@ const userSchema = new Schema<UserType>(
     followers: arrayType,
     following: arrayType,
     friends: arrayType,
-    address: stringType,
-    mobile: {
-      type: Number,
-      required: true,
-    },
     password: String,
     oAuth: {
       type: Boolean,
