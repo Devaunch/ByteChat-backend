@@ -18,8 +18,6 @@ export const Register: RequestHandler = async (req, res, next) => {
     age,
     languages,
     avatarImg,
-    address,
-    mobile,
     gender,
     DOB,
   } = req.body;
@@ -29,8 +27,6 @@ export const Register: RequestHandler = async (req, res, next) => {
     !password ||
     !age ||
     !languages ||
-    !address ||
-    !mobile ||
     !gender ||
     !DOB
   ) {
@@ -51,9 +47,7 @@ export const Register: RequestHandler = async (req, res, next) => {
       email,
       age,
       password,
-      languages,
-      address,
-      mobile,
+      languages,  
       gender,
       DOB,
       avatarImg: avatarImg || "none",
