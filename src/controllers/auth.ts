@@ -34,9 +34,8 @@ export const Register: RequestHandler = async (req, res, next) => {
   }
   try {
     const emailExists = await USER.find({ email });
-    const numberExists = await USER.find({ mobile });
 
-    if (emailExists.length !== 0 || numberExists.length !== 0) {
+    if (emailExists.length !== 0) {
       return next(
         createError("You already have an account, Please login to proceed", 402)
       );
