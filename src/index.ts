@@ -2,9 +2,12 @@ import { config } from "dotenv";
 config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import session from "express-session";
+import passport from "passport";
 import { connect } from "mongoose";
 import authRouter from "./routes/auth";
 import { ErrorType } from "./utils/types";
+import './middleware/passport'
 
 //import constants
 const app = express();
@@ -23,7 +26,25 @@ const startServer = () => {
   //essential middleware
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-  app.use(cors());
+  app.use(cors({
+    methods:"PUT,PULL,POST,GET,DELETE,OPTIONS",
+    credentials:true,
+  }));
+  // app.use(
+  //   cookieSession({
+  //     name: "session",
+  //     keys: ["kartikey"],
+  //     maxAge: 24 * 60 * 60 * 1000,
+  //   })
+  // );
+  app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  }))
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   //routers
   app.use("/api/auth", authRouter);
