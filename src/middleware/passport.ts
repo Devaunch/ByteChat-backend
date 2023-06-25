@@ -8,8 +8,13 @@ passport.use(
       clientSecret: process.env.GOOGLE_SECRET || "your_google_secret",
       callbackURL: "/api/auth/google/callback",
     },
-    function (accToken, refreshToken, profile, done) {
-      console.log(profile);
+    async function (accToken, refreshToken, profile, done) {
+      const {displayName, emails} = profile
+      if(!emails) throw new Error("no email")
+      const newUser = new USER({
+        name:displayName,
+        email:emails[0].value,
+      })
       done(null, profile);
     }
   )

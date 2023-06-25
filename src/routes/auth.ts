@@ -28,7 +28,7 @@ authRouter.get("/login/success", (req, res) => {
 
 authRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email", "age"] })
 );
 
 authRouter.get("/", (req, res) => {

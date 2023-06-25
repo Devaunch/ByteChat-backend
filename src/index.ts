@@ -30,13 +30,6 @@ const startServer = () => {
     methods:"PUT,PULL,POST,GET,DELETE,OPTIONS",
     credentials:true,
   }));
-  // app.use(
-  //   cookieSession({
-  //     name: "session",
-  //     keys: ["kartikey"],
-  //     maxAge: 24 * 60 * 60 * 1000,
-  //   })
-  // );
   app.use(session({
     secret: 'keyboard cat',
     resave: false,
