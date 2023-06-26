@@ -1,0 +1,8 @@
+LICENSE
+.gitignore
+*.md
+src/api
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
