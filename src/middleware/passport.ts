@@ -2,11 +2,12 @@ import passport from "passport";
 import { Strategy as GoogleLogin } from "passport-google-oauth20";
 import { Strategy as GithubLogin } from "passport-github2";
 import USER from "../model/User";
+import config from "../config"
 passport.use(
   new GoogleLogin(
     {
-      clientID: process.env.GOOGLE_CLIENT || "your_google_client_id",
-      clientSecret: process.env.GOOGLE_SECRET || "your_google_secret",
+      clientID: config.oAuth.google.id,
+      clientSecret: config.oAuth.google.secret,
       callbackURL: "/api/auth/google/callback",
     },
     async function (accToken, refreshToken, profile, done) {
@@ -29,8 +30,8 @@ passport.use(
 passport.use(
   new GithubLogin(
     {
-      clientID: process.env.GITHUB_ID || "you_github_id",
-      clientSecret: process.env.GITHUB_SECRET || "your_github_secret",
+      clientID: config.oAuth.github.id,
+      clientSecret: config.oAuth.github.secret,
       callbackURL: "/api/auth/github/callback",
       scope: ["user:email"],
     },

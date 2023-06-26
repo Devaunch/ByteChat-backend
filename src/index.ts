@@ -1,5 +1,5 @@
-import { config } from "dotenv";
-config();
+import dotenv from "dotenv";
+dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
@@ -9,12 +9,13 @@ import { connect } from "mongoose";
 import authRouter from "./routes/auth";
 import { ErrorType } from "./utils/types";
 import './middleware/passport'
+import config from "./config";
 
 //import constants
 const app = express();
-const PORT = process.env.PORT;
+const PORT = config.server.port;
 
-connect(process.env.MONGO_URL || "mognodb://127.0.0.1/sociomedia")
+connect(config.db.default)
   .then(() => {
     console.log("Connected to db");
     startServer();
@@ -35,7 +36,7 @@ const startServer = () => {
 
   app.use(cookieSession({
     name: "session",
-    keys: ["kartikey"],
+    keys: [config.keys.session],
     maxAge: 24 * 60 * 60 * 1000,
   }))
   app.use(passport.initialize());

@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import config from "../config";
 
 export interface UserType {
   name: string;
@@ -67,7 +68,7 @@ userSchema.methods.generateAuthToken = async function (): Promise<string> {
   try {
     const token = jwt.sign(
       { _id: this._id.toString() },
-      process.env.JWT_KEY || "yoursecretkey"
+      config.keys.jwt
     );
     this.tokens = this.tokens.concat({ token: token });
     await this.save();

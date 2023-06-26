@@ -4,12 +4,13 @@ import jwt from "jsonwebtoken";
 import USER from "../model/User";
 import { createError } from "../utils/createError";
 import { CookieType } from "../utils/types";
+import config from "../config";
 
 const cookieOps: CookieType = {
   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   httpOnly: true,
 };
-if (process.env.DEV_ENV === "production") cookieOps.secure = true;
+if (config.server.env === "production") cookieOps.secure = true;
 
 export const Register: RequestHandler = async (req, res, next) => {
   const { name, email, password, avatarImg } = req.body;
@@ -82,7 +83,7 @@ export const Check: RequestHandler = async (req, res, next) => {
     }
     const token = req.cookies?.jwt;
     if (token) {
-      const userId = jwt.verify(token, process.env.JWT_KEY || "your_jwt_key");
+      const userId = jwt.verify(token, config.keys.jwt);
       const user = await USER.findById(userId);
       return res.status(200).json({
         success:true,
