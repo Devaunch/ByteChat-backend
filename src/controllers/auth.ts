@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import USER from "../model/User";
 import { createError } from "../utils/createError";
 import { CookieType } from "../utils/types";
@@ -11,26 +12,9 @@ const cookieOps: CookieType = {
 if (process.env.DEV_ENV === "production") cookieOps.secure = true;
 
 export const Register: RequestHandler = async (req, res, next) => {
-  const {
-    name,
-    email,
-    password,
-    age,
-    languages,
-    avatarImg,
-    gender,
-    DOB,
-  } = req.body;
-  if (
-    !name ||
-    !email ||
-    !password ||
-    !age ||
-    !languages ||
-    !gender ||
-    !DOB
-  ) {
-    return next(createError("Please provide all the fields", 402));
+  const { name, email, password, avatarImg } = req.body;
+  if (!name || !email || !password) {
+    return next(createError("Please provide all the necessary fields", 402));
   }
   try {
     const emailExists = await USER.find({ email });
@@ -44,11 +28,7 @@ export const Register: RequestHandler = async (req, res, next) => {
     const user = new USER({
       name,
       email,
-      age,
       password,
-      languages,  
-      gender,
-      DOB,
       avatarImg: avatarImg || "none",
       oAuth: false,
     });
@@ -84,6 +64,38 @@ export const Login: RequestHandler = async (req, res, next) => {
       success: true,
       status: 200,
       message: "You were logged in successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const Check: RequestHandler = async (req, res, next) => {
+  try {
+    if (req.user) {
+      return res.status(200).json({
+        success:true,
+        loggedIn:true,
+        cookies:req.cookies,
+        user:req.user,
+      });
+    }
+    const token = req.cookies?.jwt;
+    if (token) {
+      const userId = jwt.verify(token, process.env.JWT_KEY || "your_jwt_key");
+      const user = await USER.findById(userId);
+      return res.status(200).json({
+        success:true,
+        loggedIn:true,
+        cookies:req.cookies,
+        user,
+      });
+    }
+    return res.status(401).json({
+      success:true,
+      loggedIn:false,
+      cookies:req.cookies,
+      user:null,
     });
   } catch (err) {
     next(err);

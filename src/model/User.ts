@@ -37,11 +37,8 @@ const arrayType = {
 const userSchema = new Schema<UserType>(
   {
     name: stringType,
-    email: stringType,
-    age: {
-      type: Number,
-      required: true,
-    },
+    email: {...stringType, unique:true},
+    age: Number,
     languages: arrayType,
     avatarImg: stringType,
     followers: arrayType,
@@ -52,20 +49,13 @@ const userSchema = new Schema<UserType>(
       type: Boolean,
       required: true,
     },
-    gender: {
-      type: String,
-      required: true,
-    },
-    DOB: {
-      type: Date,
-      required: true,
-    },
+    gender:String,
+    DOB: Date,
     badges: arrayType,
     tokens: [
       {
         token: {
-          type: String,
-          required: true,
+          type: String
         },
       },
     ],

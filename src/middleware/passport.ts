@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleLogin } from "passport-google-oauth20";
-import USER from "src/model/User";
+import USER from "../model/User";
 passport.use(
   new GoogleLogin(
     {
@@ -9,13 +9,18 @@ passport.use(
       callbackURL: "/api/auth/google/callback",
     },
     async function (accToken, refreshToken, profile, done) {
-      const {displayName, emails} = profile
-      if(!emails) throw new Error("no email")
-      const newUser = new USER({
-        name:displayName,
-        email:emails[0].value,
-      })
-      done(null, profile);
+      const { displayName, emails, photos } = profile;
+      if (!emails || !photos) throw new Error("couldnt authenticate properly");
+      const dbUser = await USER.find({ email: emails[0].value });
+      if (dbUser) return done(null, dbUser);
+      const User = new USER({
+        name: displayName,
+        email: emails[0].value,
+        avatarImg: photos[0].value,
+        oAuth: true,
+      });
+      const savedUser = await User.save();
+      done(null, savedUser);
     }
   )
 );

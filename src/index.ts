@@ -3,6 +3,7 @@ config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
+import cookieSession from "cookie-session";
 import passport from "passport";
 import { connect } from "mongoose";
 import authRouter from "./routes/auth";
@@ -27,14 +28,15 @@ const startServer = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cors({
-    methods:"PUT,PULL,POST,GET,DELETE,OPTIONS",
+    origin:"http://localhost:3000",
+    methods:"PUT,POST,GET,DELETE",
     credentials:true,
   }));
-  app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
+
+  app.use(cookieSession({
+    name: "session",
+    keys: ["kartikey"],
+    maxAge: 24 * 60 * 60 * 1000,
   }))
   app.use(passport.initialize());
   app.use(passport.session());
