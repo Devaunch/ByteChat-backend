@@ -5,6 +5,6 @@ export type ErrorType = {
 
 export type CookieType = {
   expires: Date;
-  httpOnly: true;
+  httpOnly: boolean;
   secure?: boolean;
 };
