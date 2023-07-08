@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import session from "express-session";
+import cookieParser from "cookie-parser"
 import cookieSession from "cookie-session";
 import passport from "passport";
 import { connect } from "mongoose";
@@ -28,8 +28,9 @@ const startServer = () => {
   //essential middleware
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser())
   app.use(cors({
-    origin:"http://localhost:3000",
+    origin:"http://192.168.1.2:3000",
     methods:"PUT,POST,GET,DELETE",
     credentials:true,
   }));
