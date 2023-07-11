@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Register, Login, Check } from '../controllers/auth';
+import { Register, Login, Check, oAuth } from '../controllers/auth';
 import passport from 'passport';
 
 const authRouter = Router();
@@ -28,6 +28,7 @@ authRouter.get(
 
 authRouter.post('/register', Register);
 authRouter.post('/login', Login);
+authRouter.post('/oAuth', oAuth)
 
 authRouter.get('/check', Check);
 export default authRouter;
