@@ -11,6 +11,7 @@ import authRouter from './routes/auth';
 import questionsRouter from './routes/questions';
 import userRouter from './routes/user';
 import { ErrorType } from './utils/types';
+import Logging from './utils/Logging'
 import './middleware/passport';
 import config from './config';
 
@@ -28,6 +29,15 @@ connect(config.db.default)
     });
 
 const startServer = () => {
+   app.use((req, res, next) => {
+      const { url } = req;
+      Logging.info(`Requesting Method:[${req.method}] -> ${url} from [${req.socket.remoteAddress}]`);
+      res.on('finish', () => {
+         Logging.info(`Responding Method:[${req.method}] -> ${url} from [${req.socket.remoteAddress}] status:[${res.statusCode}]`);
+      });
+      next();
+   });
+
    //essential middleware
    app.use(express.json());
    app.use(express.urlencoded({ extended: false }));
