@@ -1,9 +1,10 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config";
 
 export interface UserType {
+  _id:ObjectId,
   name: string;
   email: string;
   age: number;

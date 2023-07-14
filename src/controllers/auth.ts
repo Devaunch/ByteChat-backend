@@ -1,8 +1,9 @@
 import { RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import USER from '../model/User';
+import USER, { UserType } from '../model/User';
 import { createError } from '../utils/createError';
+import { mongoUserDoc } from 'src/utils/types';
 import config from '../config';
 
 export const Register: RequestHandler = async (req, res, next) => {
@@ -77,6 +78,7 @@ export const Check: RequestHandler = async (req, res, next) => {
             });
         }
         const token = req.headers.authorization?.split(' ')[1];
+        console.log(token)
         // const token = req.cookies.jwt;
         if (token && token !== 'null') {
             const userId = jwt.verify(token, config.keys.jwt);
@@ -113,7 +115,7 @@ export const oAuth: RequestHandler = async (req, res, next) => {
                 success: true,
                 status: 200,
                 token,
-                user: { ...user._doc, tokens: undefined }
+                user: { ...(user as mongoUserDoc<typeof user>)._doc, tokens: undefined }
             });
         }
         const newUser = new USER({
@@ -127,11 +129,37 @@ export const oAuth: RequestHandler = async (req, res, next) => {
             success: true,
             status: 201,
             user: {
-                ...newUser._doc,
+                ...(newUser as mongoUserDoc<typeof newUser>)._doc,
                 tokens: undefined
             },
             token
         });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const Logout: RequestHandler = async (req, res, next) => {
+    const { _id, tokens } = req.user as UserType;
+    const token = req.cookies.jwt || req.headers?.authorization?.split(' ')[1];
+    const newTokens = tokens.filter((tokenObj) => tokenObj.token !== token);
+    try {
+        const result = await USER.updateOne(
+            { _id },
+            {
+                $set: {
+                    tokens: newTokens
+                }
+            }
+        );
+        if (result) {
+            res.clearCookie('jwt');
+            return res.status(200).json({
+                success: true,
+                message: 'logged out successfully',
+                status: 200
+            });
+        }
     } catch (err) {
         next(err);
     }
