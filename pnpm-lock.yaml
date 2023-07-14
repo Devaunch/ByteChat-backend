@@ -54,8 +54,8 @@ dependencies:
     specifier: ^7.3.0
     version: 7.3.0
   passport:
-    specifier: ^0.5.0
-    version: 0.5.0
+    specifier: ^0.6.0
+    version: 0.6.0
   passport-github2:
     specifier: ^0.1.12
     version: 0.1.12
@@ -2041,12 +2041,13 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: false
 
-  /passport@0.5.0:
-    resolution: {integrity: sha512-ln+ue5YaNDS+fes6O5PCzXKSseY5u8MYhX9H5Co4s+HfYI5oqvnHKoOORLYDUPh+8tHvrxugF2GFcUA1Q1Gqfg==}
+  /passport@0.6.0:
+    resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
     dev: false
 
   /path-is-absolute@1.0.1:
